@@ -7,9 +7,11 @@
 #include <pthread.h>
 #include <stdbool.h>
 
-#include <openssl/md5.h>
+#include "md5.h"
 
 #define MAX_THREAD 4
+#define MESSAGE_LENGTH 8
+#define MD5_DIGEST_LENGTH 16
 
 uint8_t ans[MD5_DIGEST_LENGTH];
 bool flag = false;
@@ -32,10 +34,7 @@ void *thread_func(void *arg) {
 
         sprintf(num, "%08d", i);
 
-        MD5_CTX context;
-        MD5_Init(&context);
-        MD5_Update(&context, num, strlen(num));
-        MD5_Final(digest, &context);
+        md5(num, MESSAGE_LENGTH, digest);
 
         if (memcmp(digest, ans, 16) == 0) {
             printf("The number is %08d\n", i);
