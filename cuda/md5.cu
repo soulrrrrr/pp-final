@@ -53,7 +53,7 @@ __global__ void md5(size_t initial_len, uint8_t *ans, int *val)
     int idx; idx = blockDim.x * blockIdx.x + threadIdx.x;
     int t = 10000000;
     uint8_t initial_msg[8];
-    for (int i = 0; i < initial_len; i++)
+    for (int i = 0; i < 8; i++)
     {
         initial_msg[i] = (idx / t);
         idx -= initial_msg[i]*t;
