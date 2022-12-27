@@ -1,10 +1,13 @@
 CC = gcc
 CFLAGS = -O3
 
-all:
-	$(CC) $(CFLAGS) solve_md5.c -o solve_md5 -lpthread -lcrypto
+solve_md5: solve_md5.o md5.o
+	$(CC) $(CFLAGS) $^ -o $@ -lpthread
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f ./solve_md5
+	rm -f ./solve_md5 *.o
 
 .PHONY: clean
