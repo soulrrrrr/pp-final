@@ -5,14 +5,11 @@
 #include <sys/wait.h>  /* for wait */
 #include <string.h>
 
-#include "md5.h"
-
-#define MESSAGE_LENGTH 8
-#define PATH_MAX 1024
+#include <openssl/md5.h>
 
 int main(int argc, char **argv) {
-    uint8_t hash[16];
-    uint8_t ans[16];
+    uint8_t digest[MD5_DIGEST_LENGTH];
+    uint8_t ans[MD5_DIGEST_LENGTH];
     char num[9];
     num[8] = '\0';
 
@@ -26,9 +23,13 @@ int main(int argc, char **argv) {
 
     for (int i = 0; i < 100000000; i++) {
         sprintf(num, "%08d", i);
-        md5(num, MESSAGE_LENGTH, hash);
 
-        if (memcmp(hash, ans, 16) == 0) {
+        MD5_CTX context;
+        MD5_Init(&context);
+        MD5_Update(&context, num, strlen(num));
+        MD5_Final(digest, &context);
+
+        if (memcmp(digest, ans, 16) == 0) {
             printf("The number is %08d\n", i);
             break;
         }

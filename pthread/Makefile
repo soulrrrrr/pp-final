@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -O3
 
 all:
-	$(CC) $(CFLAGS) solve_md5.c -o solve_md5 -lcrypto
+	$(CC) $(CFLAGS) solve_md5.c -o solve_md5 -lpthread -lcrypto
 
 clean:
 	rm -f ./solve_md5
