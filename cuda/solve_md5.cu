@@ -11,7 +11,8 @@
 int main(int argc, char **argv) {
 
     // initiate answer
-    uint8_t ans[16];
+    uint8_t *ans;
+    cudaMallocManaged((void**)&ans, sizeof(uint8_t) * 16);
     for (int i = 0; i < 16; i++) {
         char a = argv[1][i * 2];
         char b = argv[1][i * 2 + 1];
@@ -20,17 +21,18 @@ int main(int argc, char **argv) {
         ans[i] = (a << 4) + b;
     }
 
-    uint8_t *d_ans;
-    cudaMalloc(&d_ans, 16*sizeof(uint8_t));
-    cudaMemcpy(d_ans, ans, 16*sizeof(uint8_t), cudaMemcpyHostToDevice);
-    int val = -1, *d_val;
-    cudaMalloc(&d_val, 1*sizeof(int));
+    // uint8_t *d_ans;
+    // cudaMallocHost(&d_ans, 16*sizeof(uint8_t));
+    // cudaMemcpy(d_ans, ans, 16*sizeof(uint8_t), cudaMemcpyHostToDevice);
+    int *val;
+    cudaMallocManaged((void**)&val, sizeof(int) * 1); 
+    // cudaMalloc(&d_val, 1*sizeof(int));
     int block = (LIMIT / THREAD_COUNT) + 1;
-    md5<<<block, THREAD_COUNT>>>(MESSAGE_LENGTH, d_ans, d_val);
+    md5<<<block, THREAD_COUNT>>>(MESSAGE_LENGTH, ans, val);
     cudaDeviceSynchronize();
-    cudaMemcpy(&val, d_val, 1*sizeof(int), cudaMemcpyDeviceToHost);
+    // cudaMemcpy(&val, d_val, 1*sizeof(int), cudaMemcpyDeviceToHost);
 
-    printf("The number is %08d\n", val);
+    printf("The number is %08d\n", *val);
 
     return 0;
 }
