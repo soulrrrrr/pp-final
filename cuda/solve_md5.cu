@@ -6,7 +6,7 @@
 
 #define MESSAGE_LENGTH 8
 #define LIMIT 100000000
-#define THREAD_COUNT 1024
+#define THREAD_COUNT 512
 
 int main(int argc, char **argv) {
 
